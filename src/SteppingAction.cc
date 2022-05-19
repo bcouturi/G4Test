@@ -53,6 +53,7 @@
 #include "G4Step.hh"
 #include "G4Track.hh"
 #include "G4OpticalPhoton.hh"
+#include "G4VPhysicalVolume.hh"
 
 #include <math.h>
 
@@ -71,7 +72,7 @@ SteppingAction::~SteppingAction() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void SteppingAction::UserSteppingAction(const G4Step* /*step*/)
+void SteppingAction::UserSteppingAction(const G4Step* step)
 {	
 /*
   	//detector construction instance
@@ -80,22 +81,22 @@ void SteppingAction::UserSteppingAction(const G4Step* /*step*/)
 		  (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
 */	
 
-/*	
+
 	//get pre and post step points
 	G4StepPoint* preStepPoint = step->GetPreStepPoint();
-	G4StepPoint* postStepPoint = step->GetPostStepPoint();
+	//G4StepPoint* postStepPoint = step->GetPostStepPoint();
 
 	//get the volume of the current step
-  	G4LogicalVolume* volume = preStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
-  	
+  	//G4LogicalVolume* volume = preStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
+	
   	//get track and particle name
   	G4Track* track = step->GetTrack();
   	G4int ID = track->GetTrackID();
  	G4String partName = track->GetDefinition()->GetParticleName();
-     	
+    G4VPhysicalVolume* pvolume = preStepPoint->GetTouchableHandle()->GetVolume();
+	G4cout << partName << ":" << ID << " in PVol:" << pvolume->GetName() << ":" <<  pvolume->GetCopyNo() << G4endl; 	
  	//get the total energy deposited by the particle during the current step
-  	G4double edep = step->GetTotalEnergyDeposit();
-*/
+  	//G4double edep = step->GetTotalEnergyDeposit();
 
 	
 }

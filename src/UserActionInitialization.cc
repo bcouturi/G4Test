@@ -22,10 +22,6 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-//
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "UserActionInitialization.hh"
 
@@ -34,31 +30,31 @@
 #include "EventAction.hh"
 #include "SteppingAction.hh"
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 
 UserActionInitialization::UserActionInitialization(){}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 
 UserActionInitialization::~UserActionInitialization(){}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 
 void UserActionInitialization::Build() const 
 {
     SetUserAction(new PrimaryGeneratorAction());
 
-	// RunAction* runAction = new RunAction();
-	// SetUserAction(runAction);
+	RunAction* runAction = new RunAction();
+	SetUserAction(runAction);
 	
-	// EventAction* eventAction = new EventAction(runAction);
-	// SetUserAction(eventAction);
+	EventAction* eventAction = new EventAction(runAction);
+	SetUserAction(eventAction);
 
-	// SteppingAction* stepAction = new SteppingAction(eventAction);
-	// SetUserAction(stepAction);
+	SteppingAction* stepAction = new SteppingAction(eventAction);
+	SetUserAction(stepAction);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
 
 void UserActionInitialization::BuildForMaster() const 
 {
@@ -66,5 +62,5 @@ void UserActionInitialization::BuildForMaster() const
 	SetUserAction(runAction);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
 

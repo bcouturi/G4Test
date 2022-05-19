@@ -8,8 +8,8 @@
 /vis/open OGL
 
 #Disable auto refresh and quieten vis messages whilst scene and trajectories are established:
-#/vis/viewer/set/autoRefresh false
-#/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
 
 #Draw a scene
 /vis/viewer/reset

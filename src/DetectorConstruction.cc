@@ -24,7 +24,6 @@
 // ********************************************************************
 //
 
-
 #include "DetectorConstruction.hh"
 #include "SensitiveDetector.hh"
 
@@ -136,9 +135,9 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 										6 * cm,
 										10 * mm, 0., twopi);
 	G4SubtractionSolid *sd_sensor = new G4SubtractionSolid("sensor", sd_sensor_box, si_sensor_hole);
-	G4LogicalVolume *lv_sensor = new G4LogicalVolume(sd_sensor,
-													 G4_Si,
-													 "lv_sensor");
+	lv_sensor = new G4LogicalVolume(sd_sensor,
+									G4_Si,
+									"lv_sensor");
 
 	// First group of sensors
 	for (int i = 0; i < 10; i++)
@@ -164,7 +163,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 												 "pv_sensor",
 												 lv_world,
 												 false,
-												 i);
+												 100+ i);
 		sensor_placements["B" + std::to_string(i)] = p;
 	}
 
@@ -199,21 +198,20 @@ void DetectorConstruction::ConstructSDandField()
 	// [PID=303157, TID=-1][16/19]> ./build/myApp(+0x7c45) [0x5614c2e50c45]
 	// [PID=303157, TID=-1][17/19]> /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f9efbb940b3]
 	// [PID=303157, TID=-1][18/19]> ./build/myApp(+0x8999) [0x5614c2e51999]
-
 	// : Segmentation fault (Address not mapped to object [(nil)])
 	// Aborted (core dumped)
 
-	// //Sensitive Detector
-	// G4VSensitiveDetector* vDetectror = new SensitiveDetector("det");
-	// G4SDManager::GetSDMpointer()->AddNewDetector(vDetectror);
-	// myPolyhedraLogical->SetSensitiveDetector(vDetectror);
+	//Sensitive Detector
+	G4VSensitiveDetector* vDetector = new SensitiveDetector("det");
+	G4SDManager::GetSDMpointer()->AddNewDetector(vDetector);
+	lv_sensor->SetSensitiveDetector(vDetector);
 
-	// //Dose Scoring
-	// G4MultiFunctionalDetector* multisd = new G4MultiFunctionalDetector("multisd");
-	// G4VPrimitiveScorer* dosedet = new G4PSDoseDeposit("dose");
-	// multisd->RegisterPrimitive(dosedet);
-	// G4SDManager::GetSDMpointer()->AddNewDetector(multisd);
-	// SetSensitiveDetector("myPolyhedraLogical",multisd);
+	//Dose Scoring
+	G4MultiFunctionalDetector* multisd = new G4MultiFunctionalDetector("multisd");
+	G4VPrimitiveScorer* dosedet = new G4PSDoseDeposit("dose");
+	multisd->RegisterPrimitive(dosedet);
+	G4SDManager::GetSDMpointer()->AddNewDetector(multisd);
+	SetSensitiveDetector("lv_sensor",multisd);
 
 	// if I use the following expression
 	// myPolyhedraLogical->SetSensitiveDetector(multisd);

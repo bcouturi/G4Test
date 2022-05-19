@@ -12,7 +12,7 @@ endif()
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #set(CMAKE_CXX_EXTENSIONS OFF)
 
-project(myApp)
+project(scope)
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 set(CMAKE_BUILD_TYPE Debug)
 #----------------------------------------------------------------------------
@@ -61,17 +61,17 @@ endforeach()
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 
-add_executable(myApp myApp.cc ${sources} ${headers})
-target_link_libraries(myApp ${Geant4_LIBRARIES})
+add_executable(scope scope.cc ${sources} ${headers})
+target_link_libraries(scope ${Geant4_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # For internal Geant4 use - but has no effect if you build this
-# myApp standalone
+# scope standalone
 
-#add_custom_target(myApp_custom DEPENDS myApp)
+#add_custom_target(scope_custom DEPENDS scope)
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS myApp DESTINATION bin)
+install(TARGETS scope DESTINATION bin)
 
