@@ -22,10 +22,6 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// 
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
@@ -57,49 +53,41 @@
 
 #include <math.h>
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-SteppingAction::SteppingAction(EventAction* eventAction):
-G4UserSteppingAction(),
-fEventAction(eventAction)
-{  	
+SteppingAction::SteppingAction(EventAction *eventAction) : G4UserSteppingAction(),
+														   fEventAction(eventAction)
+{
 	G4cout << "### SteppingAction instantiated ###" << G4endl;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 SteppingAction::~SteppingAction() {}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void SteppingAction::UserSteppingAction(const G4Step *step)
+{
+	/*
+		//detector construction instance
+		const DetectorConstruction* detectorConstruction =
+			static_cast<const DetectorConstruction*>
+			  (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+	*/
 
-void SteppingAction::UserSteppingAction(const G4Step* step)
-{	
-/*
-  	//detector construction instance
-	const DetectorConstruction* detectorConstruction = 
-		static_cast<const DetectorConstruction*>
-		  (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-*/	
+	// get pre and post step points
+	// G4StepPoint* preStepPoint = step->GetPreStepPoint();
+	G4StepPoint *postStepPoint = step->GetPostStepPoint();
 
+	// get the volume of the current step
+	// G4LogicalVolume* volume = preStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
 
-	//get pre and post step points
-	G4StepPoint* preStepPoint = step->GetPreStepPoint();
-	//G4StepPoint* postStepPoint = step->GetPostStepPoint();
+	// get track and particle name
+	G4Track *track = step->GetTrack();
+	G4int ID = track->GetTrackID();
+	G4String partName = track->GetDefinition()->GetParticleName();
+	G4String sensor_name = "lv_sensor";
+	if (postStepPoint != nullptr && postStepPoint->GetTouchableHandle()->GetVolume() != nullptr && postStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume()->GetName() == sensor_name)
+	{
+		// G4VPhysicalVolume *pvolume = postStepPoint->GetTouchableHandle()->GetVolume();
+		// G4cout << partName << ":" << ID << " in PVol:" << pvolume->GetName() << ":" << pvolume->GetCopyNo() << G4endl;
+	}
 
-	//get the volume of the current step
-  	//G4LogicalVolume* volume = preStepPoint->GetTouchableHandle()->GetVolume()->GetLogicalVolume();
-	
-  	//get track and particle name
-  	G4Track* track = step->GetTrack();
-  	G4int ID = track->GetTrackID();
- 	G4String partName = track->GetDefinition()->GetParticleName();
-    G4VPhysicalVolume* pvolume = preStepPoint->GetTouchableHandle()->GetVolume();
-	G4cout << partName << ":" << ID << " in PVol:" << pvolume->GetName() << ":" <<  pvolume->GetCopyNo() << G4endl; 	
- 	//get the total energy deposited by the particle during the current step
-  	//G4double edep = step->GetTotalEnergyDeposit();
-
-	
+	// get the total energy deposited by the particle during the current step
+	// G4double edep = step->GetTotalEnergyDeposit();
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-

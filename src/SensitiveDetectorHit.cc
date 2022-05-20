@@ -179,7 +179,8 @@ void SensitiveDetectorHit::Print()
 {
     G4cout << " Hit at time " << fTime/ns
     << " (nsec) - pos(x,y,z) " << fPos/mm
-    << " (mm) - mom(x,y,z) " << fMom/eV << " eV" << G4endl;
+    << " (mm) - mom(x,y,z) " << fMom/eV << " eV"
+    << " local (x,y,z) " << fLocalPos << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

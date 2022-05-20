@@ -74,7 +74,7 @@ RunAction::~RunAction() {
 	if (fIsFileOpened) {
     	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance(); 
       	analysisManager->Write();
-      	//analysisManager->CloseFile();
+      	analysisManager->CloseFile();
     }
 }
 

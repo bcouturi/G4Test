@@ -163,55 +163,62 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 												 "pv_sensor",
 												 lv_world,
 												 false,
-												 100+ i);
+												 100 + i);
 		sensor_placements["B" + std::to_string(i)] = p;
 	}
 
+	G4Box *sd_hsensor = new G4Box("hsensor",
+								  80 * cm,
+								  80 * cm,
+								  2 * mm);
+
+	lv_hsensor = new G4LogicalVolume(sd_hsensor,
+									 G4_Si,
+									 "lv_hsensor");
+	G4RotationMatrix *myRotationMatrix = new G4RotationMatrix();
+	myRotationMatrix->rotateX(-90. * CLHEP::deg);
+	G4VPhysicalVolume *h0 = new G4PVPlacement(myRotationMatrix,
+											  G4ThreeVector(0., 80. * cm, -100 * cm),
+											  lv_hsensor,
+											  "pv_hsensor",
+											  lv_world,
+											  false,
+											  0);
+	sensor_placements["H0"] = h0;
+
+	G4VPhysicalVolume *h1 = new G4PVPlacement(myRotationMatrix,
+											  G4ThreeVector(0., -80. * cm, -100 * cm),
+											  lv_hsensor,
+											  "pv_hsensor",
+											  lv_world,
+											  false,
+											  1);
+	sensor_placements["H1"] = h1;
 	return pv_world;
 }
 
 void DetectorConstruction::ConstructSDandField()
 {
 
-	// XXX TO be investigated Setting the field
-	// G4FieldManager* globalFieldMgr = G4TransportationManager::GetTransportationManager()-> GetFieldManager();
-	// G4MagneticField* magField = new G4UniformMagField(G4ThreeVector(0.1*tesla,0.,0.));
-	// globalFieldMgr->SetDetectorField(magField);
+	// Setting the field
+	G4FieldManager *globalFieldMgr =
+		G4TransportationManager::GetTransportationManager()->GetFieldManager();
+	G4MagneticField *magField = new G4UniformMagField(G4ThreeVector(0.5 * tesla, 0., 0.));
+	globalFieldMgr->SetDetectorField(magField);
+	globalFieldMgr->CreateChordFinder(magField);
 
-	// Backtrace:
-	// [PID=303157, TID=-1][ 0/19]> /data/miniconda3/envs/geant4/lib/libG4processes.so(_ZN16G4Transportation37AlongStepGetPhysicalInteractionLengthERK7G4TrackddRdP15G4GPILSelection+0x6b7) [0x7f9efdf73287]
-	// [PID=303157, TID=-1][ 1/19]> /data/miniconda3/envs/geant4/lib/libG4tracking.so(_ZN17G4SteppingManager24DefinePhysicalStepLengthEv+0x284) [0x7f9efea2cad4]
-	// [PID=303157, TID=-1][ 2/19]> /data/miniconda3/envs/geant4/lib/libG4tracking.so(_ZN17G4SteppingManager8SteppingEv+0x299) [0x7f9efea2b239]
-	// [PID=303157, TID=-1][ 3/19]> /data/miniconda3/envs/geant4/lib/libG4tracking.so(_ZN17G4TrackingManager15ProcessOneTrackEP7G4Track+0x120) [0x7f9efea420e0]
-	// [PID=303157, TID=-1][ 4/19]> /data/miniconda3/envs/geant4/lib/libG4event.so(_ZN14G4EventManager12DoProcessingEP7G4Event+0x8d6) [0x7f9efea81a16]
-	// [PID=303157, TID=-1][ 5/19]> /data/miniconda3/envs/geant4/lib/libG4run.so(_ZN12G4RunManager11DoEventLoopEiPKci+0xaf) [0x7f9efeb3e52f]
-	// [PID=303157, TID=-1][ 6/19]> /data/miniconda3/envs/geant4/lib/libG4run.so(_ZN12G4RunManager6BeamOnEiPKci+0x5e) [0x7f9efeb3bd6e]
-	// [PID=303157, TID=-1][ 7/19]> /data/miniconda3/envs/geant4/lib/libG4run.so(_ZN14G4RunMessenger11SetNewValueEP11G4UIcommand8G4String+0x5f3) [0x7f9efeb759b3]
-	// [PID=303157, TID=-1][ 8/19]> /data/miniconda3/envs/geant4/lib/libG4intercoms.so(_ZN11G4UIcommand4DoItE8G4String+0x87b) [0x7f9efc2c2e2b]
-	// [PID=303157, TID=-1][ 9/19]> /data/miniconda3/envs/geant4/lib/libG4intercoms.so(_ZN11G4UImanager12ApplyCommandEPKc+0xdc8) [0x7f9efc2e2f58]
-	// [PID=303157, TID=-1][10/19]> /data/miniconda3/envs/geant4/lib/libG4intercoms.so(_ZN9G4UIbatch11ExecCommandERK8G4String+0x1f) [0x7f9efc2b1bef]
-	// [PID=303157, TID=-1][11/19]> /data/miniconda3/envs/geant4/lib/libG4intercoms.so(_ZN9G4UIbatch12SessionStartEv+0x79) [0x7f9efc2b2de9]
-	// [PID=303157, TID=-1][12/19]> /data/miniconda3/envs/geant4/lib/libG4intercoms.so(_ZN11G4UImanager16ExecuteMacroFileEPKc+0x3f) [0x7f9efc2e4a8f]
-	// [PID=303157, TID=-1][13/19]> /data/miniconda3/envs/geant4/lib/libG4intercoms.so(_ZN20G4UIcontrolMessenger11SetNewValueEP11G4UIcommand8G4String+0x26e) [0x7f9efc2d0c1e]
-	// [PID=303157, TID=-1][14/19]> /data/miniconda3/envs/geant4/lib/libG4intercoms.so(_ZN11G4UIcommand4DoItE8G4String+0x87b) [0x7f9efc2c2e2b]
-	// [PID=303157, TID=-1][15/19]> /data/miniconda3/envs/geant4/lib/libG4intercoms.so(_ZN11G4UImanager12ApplyCommandEPKc+0xdc8) [0x7f9efc2e2f58]
-	// [PID=303157, TID=-1][16/19]> ./build/myApp(+0x7c45) [0x5614c2e50c45]
-	// [PID=303157, TID=-1][17/19]> /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xf3) [0x7f9efbb940b3]
-	// [PID=303157, TID=-1][18/19]> ./build/myApp(+0x8999) [0x5614c2e51999]
-	// : Segmentation fault (Address not mapped to object [(nil)])
-	// Aborted (core dumped)
-
-	//Sensitive Detector
-	G4VSensitiveDetector* vDetector = new SensitiveDetector("det");
+	// Sensitive Detector
+	G4VSensitiveDetector *vDetector = new SensitiveDetector("det");
 	G4SDManager::GetSDMpointer()->AddNewDetector(vDetector);
 	lv_sensor->SetSensitiveDetector(vDetector);
-
-	//Dose Scoring
-	G4MultiFunctionalDetector* multisd = new G4MultiFunctionalDetector("multisd");
-	G4VPrimitiveScorer* dosedet = new G4PSDoseDeposit("dose");
+	lv_hsensor->SetSensitiveDetector(vDetector);
+	
+	// Dose Scoring
+	G4MultiFunctionalDetector *multisd = new G4MultiFunctionalDetector("multisd");
+	G4VPrimitiveScorer *dosedet = new G4PSDoseDeposit("dose");
 	multisd->RegisterPrimitive(dosedet);
 	G4SDManager::GetSDMpointer()->AddNewDetector(multisd);
-	SetSensitiveDetector("lv_sensor",multisd);
+	SetSensitiveDetector("lv_sensor", multisd);
 
 	// if I use the following expression
 	// myPolyhedraLogical->SetSensitiveDetector(multisd);

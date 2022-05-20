@@ -70,6 +70,7 @@ private:
     G4int fTrackIDP;
     G4double fTime;
     G4ThreeVector fPos;
+    G4ThreeVector fLocalPos;
     G4ThreeVector fMom;
     G4double fEnergy;
     G4int fType;
@@ -86,6 +87,9 @@ public:
     
     inline void SetPos(G4ThreeVector xyz) {fPos = xyz;}
     inline G4ThreeVector GetPos() const {return fPos;}
+
+    inline void SetLocalPos(G4ThreeVector xyz) {fLocalPos = xyz;}
+    inline G4ThreeVector GetLocalPos() const {return fLocalPos;}
     
     inline void SetMom(G4ThreeVector xyz) {fMom = xyz;}
     inline G4ThreeVector GetMom() const {return fMom;}

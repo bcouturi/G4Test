@@ -66,6 +66,7 @@ private:
 	//definition of Volumes
 	G4LogicalVolume* lv_world = nullptr;
 	G4LogicalVolume* lv_sensor = nullptr;
+	G4LogicalVolume* lv_hsensor = nullptr;
 
 	// Keep all placements in a map
 	std::map<std::string, G4VPhysicalVolume*> placements;

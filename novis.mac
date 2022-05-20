@@ -1,0 +1,3 @@
+#Initialize the kernel
+/run/initialize
+/run/beamOn 10

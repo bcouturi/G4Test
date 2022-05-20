@@ -67,14 +67,13 @@ void SensitiveDetector::Initialize(G4HCofThisEvent* HCE)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
+bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* )
 {   
-    //G4Track* vTrack = aStep->GetTrack();
-    //G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
+    G4Track* vTrack = aStep->GetTrack();
+    G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
     
-    //if(!(preStepPoint->GetStepStatus() == fGeomBoundary)) {return true;}
-
-/*       
+    if(!(preStepPoint->GetStepStatus() == fGeomBoundary)) {return true;}
+       
     G4ThreeVector pos = preStepPoint->GetPosition();
     G4ThreeVector mom = preStepPoint->GetMomentumDirection();
     
@@ -91,10 +90,9 @@ bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     else if(preStepPoint->GetMass() != 0 && preStepPoint->GetCharge() < 0) {
     	vType = 3;
    	}
-*/
 
     SensitiveDetectorHit* aHit = new SensitiveDetectorHit();
-/*
+
     aHit->SetMom(mom);
     aHit->SetPos(pos);
     aHit->SetType(vType);
@@ -103,12 +101,15 @@ bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     aHit->SetTrackID(vTrack->GetTrackID());
     aHit->SetTrackIDP(vTrack->GetParentID());  
     aHit->SetTime(preStepPoint->GetGlobalTime());
-*/ 
 	aHit->SetEnergy(aStep->GetTotalEnergyDeposit());	    	
+  
+    const G4VTouchable* t = preStepPoint->GetTouchable();
+    G4ThreeVector localPos = t->GetHistory()->GetTopTransform().TransformPoint(pos);
+    aHit->SetLocalPos(localPos);
     fHitsCollection->insert(aHit);    
     
-    //aHit->Print();
-    
+    aHit->Print();
+
     return true;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

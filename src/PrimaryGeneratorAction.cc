@@ -51,11 +51,11 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : fGPS{new G4GeneralParticleSou
 	G4cout << "### PrimaryGeneratorAction instantiated ###" << G4endl;
 
 	G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
-	G4ParticleDefinition *particle = particleTable->FindParticle("proton");
+	G4ParticleDefinition *particle = particleTable->FindParticle("pi+");
 	fGun->SetParticleDefinition(particle);
 	fGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));
 	fGun->SetParticleEnergy(1 * GeV);
-	fGun->SetParticlePosition(G4ThreeVector(0., 0., -150 * cm));
+	fGun->SetParticlePosition(G4ThreeVector(0., 0., -75 * cm));
 }
 
 
@@ -76,7 +76,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 	}
 	else
 	{
-		G4double cosTheta = 1 - G4UniformRand() / 100;
+		G4double cosTheta = 1 - 2 * G4UniformRand();// / 100;
 		G4double sinTheta2 = 1. - cosTheta * cosTheta;
 		if (sinTheta2 < 0.)
 			sinTheta2 = 0.;
